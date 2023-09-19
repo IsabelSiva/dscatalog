@@ -2,7 +2,6 @@ package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.io.Serializable;

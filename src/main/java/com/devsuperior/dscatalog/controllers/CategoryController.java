@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService service;
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -29,21 +28,21 @@ public class CategoryController {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy){
 
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction),orderBy );
-        Page<CategoryDTO> list = categoryService.findAllPaged(pageRequest);
+        Page<CategoryDTO> list = service.findAllPaged(pageRequest);
 
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        CategoryDTO categoryDTO = categoryService.findById(id);
+        CategoryDTO categoryDTO = service.findById(id);
 
         return ResponseEntity.ok().body(categoryDTO);
     }
 
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto){
-        dto = categoryService.insert(dto);
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -53,13 +52,13 @@ public class CategoryController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) throws ResourceNotFoundException {
-        CategoryDTO categoryDTO = categoryService.update(id, dto);
+        CategoryDTO categoryDTO = service.update(id, dto);
         return ResponseEntity.ok().body(categoryDTO);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) throws ResourceNotFoundException, DatabaseException {
-        categoryService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
